@@ -1,0 +1,41 @@
+problem: create a ruby chess game for the command line using OOP and testing.
+The game will be two player, follow all the rules of chess, and allow the players to save the game state.
+
+Info:
+Chess rules to note-
+-pawn promotion. Pawns can be promoted into any piece once they reach the end of the board.
+-en passant. If a pawn moves out two squares on its first move, and by doing so lands to the side of an opponent's pawn (effectively jumping past the other pawn's ability to capture it), that other pawn has the option of capturing the first pawn as it passes by. This special move must be done immediately after the first pawn has moved past, otherwise the option to capture it is no longer available.
+-Castle. One other special chess rule is called castling. This move allows you to do two important things all in one move: get your king to safety (hopefully), and get your rook out of the corner and into the game. On a player's turn he may move his king two squares over to one side and then move the rook from that side's corner to right next to the king on the opposite side. (See the example below.) However, in order to castle, the following conditions must be met:
+
+it must be that king's very first move
+it must be that rook's very first move
+there cannot be any pieces between the king and rook to move
+the king may not be in check or pass through check
+
+-draw.
+Player does not have a legal move and not in check
+players agree to draw
+Not enough pieces on the board to force a checkmate
+    Cannot checkmate with 1-2 knights or a single bishop
+A position is repeated 3 times a player may declare a draw
+50 moves where a piece has not been captured.
+
+Sources
+https://www.chess.com/learn-how-to-play-chess
+end of Info
+
+concepts and operationalization:
+
+board and squares:
+How do I create the board so that I can update it?
+
+pieces:
+pieces will be represented by two letters representing the color and piece type.
+K, Q, b, k, r, p prefixed with W, B.
+
+I want the pieces to exist at specific board positions, and board output be generated from their values.
+
+players
+overall game including rules
+
+
