@@ -18,7 +18,7 @@ module RubyChess
             @grid[x.to_s + y.to_s] = Piece.new("p", "w")
           when y == 7
             @grid[x.to_s + y.to_s] = Piece.new("p", "b")
-          when y > 2 || y < 7
+          when y > 2 && y < 7
             @grid[x.to_s + y.to_s] = "check"
           when y == 1
             case
