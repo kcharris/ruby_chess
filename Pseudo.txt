@@ -28,6 +28,7 @@ concepts and operationalization:
 
 board and squares:
 How do I create the board so that I can update it?
+The board will be represented by a grid of squares accessed by coordinate points. These squares will in turn allow pieces to be placed on them stored in a value called value. In addition, the squares will hold settings to determine if the square can be reached for attack. This is used for for check.
 
 pieces:
 pieces will be represented by two letters representing the color and piece type.
