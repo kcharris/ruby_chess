@@ -27,15 +27,16 @@ end of Info
 concepts and operationalization:
 
 board and squares:
-How do I create the board so that I can update it?
+How do I create the board so that I can update it? Empty squares are pieces with "_" to simplify things.
 
 pieces:
-pieces will be represented by two letters representing the color and piece type.
-K, Q, b, k, r, p prefixed with W, B.
+pieces will be represented by unicode characters for w and b chess pieces.
 
 I want the pieces to exist at specific board positions, and board output be generated from their values.
 
 players
+
 overall game including rules
+rules including piece movement will be tied to and spread throughout a method called move or make_move in game class that takes an appropiate piece name and available coordinate to play it at. Looping through prompt and neccessary checks until a valid option in chosen.
 
 
