@@ -56,7 +56,9 @@ module RubyChess
     attr_reader :read
 
     def initialize(piece)
-      @read = piece.encode("utf-8")
+      if piece != "_"
+        @read = piece.encode("utf-8")
+      else @read = piece       end
     end
   end
 end
