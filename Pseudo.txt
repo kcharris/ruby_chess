@@ -31,12 +31,17 @@ How do I create the board so that I can update it? Empty squares are pieces with
 
 pieces:
 pieces will be represented by unicode characters for w and b chess pieces.
+https://en.wikipedia.org/wiki/Chess_symbols_in_Unicode
 
 I want the pieces to exist at specific board positions, and board output be generated from their values.
-
-players
-
-overall game including rules
-rules including piece movement will be tied to and spread throughout a method called move or make_move in game class that takes an appropiate piece name and available coordinate to play it at. Looping through prompt and neccessary checks until a valid option in chosen.
+Pieces have value depending on their color to determine whether a piece can capture or not.
+Pieces will either need to record their own position or take their coordinate as a parameter when determining what moves are available to them.
 
 
+players:
+
+overall game including rules:
+
+valid_move in game class takes an appropiate piece name and available coordinate to play it at and returns true if the coordinate is reachable.
+
+***How do pieces move? Pieces will have basic potential moves
