@@ -17,14 +17,6 @@ module RubyChess
   class Board
     attr_accessor :grid
 
-    class Square
-      attr_accessor :value
-
-      def initialize(value = nil)
-        @value = value
-      end
-    end
-
     def initialize
       @grid = []
       8.times { @grid << [1, 2, 3, 4, 5, 6, 7, 8] }
@@ -146,4 +138,3 @@ end
 
 include RubyChess
 board = Board.new
-print board.output
