@@ -27,16 +27,21 @@ end of Info
 concepts and operationalization:
 
 board and squares:
-How do I create the board so that I can update it?
-The board will be represented by a grid of squares accessed by coordinate points. These squares will in turn allow pieces to be placed on them stored in a value called value. In addition, the squares will hold settings to determine if the square can be reached for attack. This is used for for check.
+How do I create the board so that I can update it? Empty squares are pieces with "_" to simplify things.
 
 pieces:
-pieces will be represented by two letters representing the color and piece type.
-K, Q, b, k, r, p prefixed with W, B.
+pieces will be represented by unicode characters for w and b chess pieces.
+https://en.wikipedia.org/wiki/Chess_symbols_in_Unicode
 
 I want the pieces to exist at specific board positions, and board output be generated from their values.
+Pieces have value depending on their color to determine whether a piece can capture or not.
+Pieces will either need to record their own position or take their coordinate as a parameter when determining what moves are available to them.
 
-players
-overall game including rules
 
+players:
 
+overall game including rules:
+
+valid_move in game class takes an appropiate piece name and available coordinate to play it at and returns true if the coordinate is reachable.
+
+***How do pieces move? Pieces will have basic potential moves
