@@ -97,55 +97,204 @@ module RubyChess
   end
 
   class Game
+    attr_accessor :board, :w_king_moved
+
     def initialize
       @w_turn = true
       @b_turn = false
       @w_check = false
       @b_check = false
+      @w_king_moved = false
+      @b_king_moved = false
       @board = Board.new
+      @g = @board.grid
     end
 
     def moves(x, y)
       moves = []
-      g = @board.grid
-      case @board.grid[x][y].read
+      #all moves read clockwise from 12 except king and pawn.
+      def line(color, x, y, x_shift, y_shift)
+        line_moves = []
+        new_x = x + x_shift
+        new_y = y + y_shift
+        opponent_hit = false
+        same_color = false
+        while new_x < 8 && new_x > -1 && new_y < 8 && new_y > -1 && opponent_hit != true && same_color != true
+          if @g[new_x][new_y].read == $empty_space
+            line_moves << [new_x, new_y]
+          elsif @g[new_x][new_y].color == @g[x][y].color
+            same_color = true
+          else
+            line_moves << [new_x, new_y]
+            opponent_hit = true
+          end
+          new_x += x_shift
+          new_y += y_shift
+        end
+        return line_moves
+      end
+
+      def knight(x, y)
+        moves = []
+        (1..8).each do |n|
+          case n
+          when 1
+            moves << [x + 1, y + 2] if x < 7 && y < 6 && @g[x + 1][y + 2].color != @g[x][y].color
+          when 2
+            moves << [x + 2, y + 1] if x < 6 && y < 7 && @g[x + 2][y + 1].color != @g[x][y].color
+          when 3
+            moves << [x + 2, y - 1] if x < 6 && y > 0 && @g[x + 2][y - 1].color != @g[x][y].color
+          when 4
+            moves << [x + 1, y - 2] if x < 7 && y > 1 && @g[x + 1][y - 2].color != @g[x][y].color
+          when 5
+            moves << [x - 1, y - 2] if x > 0 && y > 1 && @g[x - 1][y - 2].color != @g[x][y].color
+          when 6
+            moves << [x - 2, y - 1] if x > 1 && y > 0 && @g[x - 2][y - 1].color != @g[x][y].color
+          when 7
+            moves << [x - 2, y + 1] if x > 1 && y < 7 && @g[x - 2][y + 1].color != @g[x][y].color
+          when 8
+            moves << [x - 1, y + 2] if x > 0 && y < 6 && @g[x - 1][y + 2].color != @g[x][y].color
+          end
+        end
+        return moves
+      end
+
+      def king(x, y)
+        moves = []
+        8.times do |n|
+          case n
+          when 0
+            moves << [x, y + 1] if y < 7 && @g[x][y + 1].color != @g[x][y].color
+          when 1
+            moves << [x + 1, y + 1] if x < 7 && y < 7 && @g[x + 1][y + 1].color != @g[x][y].color
+          when 2
+            moves << [x + 1, y] if x < 7 && @g[x + 1][y].color != @g[x][y].color
+          when 3
+            moves << [x + 1, y - 1] if x < 7 && y > 0 && @g[x + 1][y - 1].color != @g[x][y].color
+          when 4
+            moves << [x, y - 1] if y > 0 && @g[x][y - 1].color != @g[x][y].color
+          when 5
+            moves << [x - 1, y - 1] if x > 0 && y > 0 && @g[x - 1][y - 1].color != @g[x][y].color
+          when 6
+            moves << [x - 1, y] if x > 0 && @g[x - 1][y].color != @g[x][y].color
+          when 7
+            moves << [x - 1, y + 1] if x > 0 && y < 7 && @g[x - 1][y + 1].color != @g[x][y].color
+          end
+        end
+        return moves
+      end
+
+      case @g[x][y].read
       when $w_pawn
-        moves << [x, y + 1] if y + 1 < 8 && g[x][y + 1].read == $empty_space
+        moves << [x, y + 1] if y + 1 < 8 && @g[x][y + 1].read == $empty_space
         if y == 1
-          moves << [x, y + 2] if g[x][y + 1].read == $empty_space && g[x][y + 2].read == $empty_space
+          moves << [x, y + 2] if @g[x][y + 1].read == $empty_space && @g[x][y + 2].read == $empty_space
         end
         if -1 < x && x < 8 && y < 7
-          moves << [x - 1, y + 1] if g[x - 1][y + 1].color == "b"
-          moves << [x + 1, y + 1] if g[x + 1][y + 1].color == "b"
-          moves << [x + 1, y + 1] if g[x + 1][y + 1].en_passant && g[x + 1][y + 1].color == "b"
-          moves << [x - 1, y + 1] if g[x - 1][y + 1].en_passant && g[x - 1][y + 1].color == "b"
+          moves << [x - 1, y + 1] if @g[x - 1][y + 1].color == "b"
+          moves << [x + 1, y + 1] if @g[x + 1][y + 1].color == "b"
+          moves << [x + 1, y + 1] if @g[x + 1][y + 1].en_passant && @g[x + 1][y + 1].color == "b"
+          moves << [x - 1, y + 1] if @g[x - 1][y + 1].en_passant && @g[x - 1][y + 1].color == "b"
         end
       when $w_rook
+        moves.concat(line("w", x, y, 0, 1))
+        moves.concat(line("w", x, y, 1, 0))
+        moves.concat(line("w", x, y, 0, -1))
+        moves.concat(line("w", x, y, -1, 0))
       when $w_knight
+        moves.concat(knight(x, y))
       when $w_bishop
+        moves.concat(line("w", x, y, 1, 1))
+        moves.concat(line("w", x, y, 1, -1))
+        moves.concat(line("w", x, y, -1, -1))
+        moves.concat(line("w", x, y, -1, 1))
       when $w_queen
+        moves.concat(line("w", x, y, 0, 1))
+        moves.concat(line("w", x, y, 1, 1))
+        moves.concat(line("w", x, y, 0, 1))
+        moves.concat(line("w", x, y, 1, -1))
+        moves.concat(line("w", x, y, 0, -1))
+        moves.concat(line("w", x, y, -1, -1))
+        moves.concat(line("w", x, y, -1, 0))
+        moves.concat(line("w", x, y, -1, 1))
       when $w_king
+        moves.concat(king(x, y))
+        if @w_king_moved == false && @w_check == false
+          count = 0
+          if @g[7][0].read == $w_rook
+            (1..2).each do |i|
+              if @g[x + i][y].read == $empty_space
+                count += 1
+              end
+            end
+            moves << [x + 2, y] if count == 2
+          end
+          count = 0
+          if @g[0][0].read == $w_rook
+            (1..3).each do |i|
+              if @g[x - i][y].read == $empty_space
+                count += 1
+              end
+            end
+            moves << [x - 2, y] if count == 3
+          end
+        end
       when $b_pawn
-        moves << [x, y - 1] if y - 1 > -1 && g[x][y - 1].read == $empty_space
+        moves << [x, y - 1] if y - 1 > -1 && @g[x][y - 1].read == $empty_space
         if y == 6
-          moves << [x, y - 2] if g[x][y - 1].read == $empty_space && g[x][y - 2].read == $empty_space
+          moves << [x, y - 2] if @g[x][y - 1].read == $empty_space && @g[x][y - 2].read == $empty_space
         end
         if -1 < x && x < 8 && y > -1
-          moves << [x - 1, y - 1] if g[x - 1][y - 1].color == "w"
-          moves << [x + 1, y - 1] if g[x + 1][y - 1].color == "w"
-          moves << [x + 1, y - 1] if g[x + 1][y - 1].en_passant && g[x + 1][y - 1].color == "w"
-          moves << [x - 1, y - 1] if g[x - 1][y - 1].en_passant && g[x - 1][y - 1].color == "w"
+          moves << [x - 1, y - 1] if @g[x - 1][y - 1].color == "w"
+          moves << [x + 1, y - 1] if @g[x + 1][y - 1].color == "w"
+          moves << [x + 1, y - 1] if @g[x + 1][y - 1].en_passant && @g[x + 1][y - 1].color == "w"
+          moves << [x - 1, y - 1] if @g[x - 1][y - 1].en_passant && @g[x - 1][y - 1].color == "w"
         end
       when $b_rook
+        moves.concat(line("b", x, y, 0, 1))
+        moves.concat(line("b", x, y, 1, 0))
+        moves.concat(line("b", x, y, 0, -1))
+        moves.concat(line("b", x, y, -1, 0))
       when $b_knight
+        moves.concat(knight(x, y))
       when $b_bishop
+        moves.concat(line("b", x, y, 1, 1))
+        moves.concat(line("b", x, y, 1, -1))
+        moves.concat(line("b", x, y, -1, -1))
+        moves.concat(line("b", x, y, -1, 1))
       when $b_queen
+        moves.concat(line("b", x, y, 0, 1))
+        moves.concat(line("b", x, y, 1, 1))
+        moves.concat(line("b", x, y, 0, 1))
+        moves.concat(line("b", x, y, 1, -1))
+        moves.concat(line("b", x, y, 0, -1))
+        moves.concat(line("b", x, y, -1, -1))
+        moves.concat(line("b", x, y, -1, 0))
+        moves.concat(line("b", x, y, -1, 1))
       when $b_king
+        moves.concat(king(x, y))
+        if @b_king_moved == false && @b_check == false
+          count = 0
+          if @g[7][7].read == $b_rook
+            (1..2).each do |i|
+              if @g[x + i][y].read == $empty_space
+                count += 1
+              end
+            end
+            moves << [x + 2, y] if count == 2
+          end
+          count = 0
+          if @g[0][7].read == $b_rook
+            (1..3).each do |i|
+              if @g[x - i][y].read == $empty_space
+                count += 1
+              end
+            end
+            moves << [x - 2, y] if count == 3
+          end
+        end
       end
       return moves
     end
   end
 end
-
-include RubyChess
-board = Board.new
