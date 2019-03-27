@@ -27,21 +27,17 @@ end of Info
 concepts and operationalization:
 
 board and squares:
-How do I create the board so that I can update it? Empty squares are pieces with "_" to simplify things.
 
 pieces:
 pieces will be represented by unicode characters for w and b chess pieces.
 https://en.wikipedia.org/wiki/Chess_symbols_in_Unicode
 
-I want the pieces to exist at specific board positions, and board output be generated from their values.
+Pieces will be stored by location inside of a variable grid that can be accessed by x and y coordinates.
 Pieces have value depending on their color to determine whether a piece can capture or not.
-Pieces will either need to record their own position or take their coordinate as a parameter when determining what moves are available to them.
 
 
 players:
 
 overall game including rules:
 
-valid_move in game class takes an appropiate piece name and available coordinate to play it at and returns true if the coordinate is reachable.
-
-***How do pieces move? Pieces will have basic potential moves
+#moves will determine available moves based on a locations piece's rules and #wcheck & #bcheck will determine if both a player gets into check and if moves are unavailable after a check.

@@ -83,9 +83,11 @@ module RubyChess
 
   class Piece
     attr_reader :read, :color
+    attr_accessor :en_passant
 
     def initialize(piece)
       @read = piece
+      @en_passant = false
       if piece == $empty_space
         @color = "none"
       else
@@ -96,42 +98,51 @@ module RubyChess
 
   class Game
     def initialize
-      w_turn = true
-      b_turn = false
-      w_check = false
-      b_check = false
-      board = Board.new
+      @w_turn = true
+      @b_turn = false
+      @w_check = false
+      @b_check = false
+      @board = Board.new
     end
 
-    def moves(piece, x, y)
+    def moves(x, y)
       moves = []
-      board.grid = g
-      case piece
-      when w_pawn
-        moves << g[x][y + 1] if g[x][y + 1].read == "_"
-        if y == 2
-          moves << g[x][y + 2] if g[x][y + 1].read == "_"
+      g = @board.grid
+      case @board.grid[x][y].read
+      when $w_pawn
+        moves << [x, y + 1] if y + 1 < 8 && g[x][y + 1].read == $empty_space
+        if y == 1
+          moves << [x, y + 2] if g[x][y + 1].read == $empty_space && g[x][y + 2].read == $empty_space
         end
-        moves << g[x - 1][y + 1] if x - 1 > 0 && g[x - 1][y + 1].read != "_"
-        moves << g[x + 1][y + 1] if x + 1 < 9 && g[x + 1][y + 1].read != "_"
-      when w_rook
-      when w_knight
-      when w_bishop
-      when w_queen
-      when w_king
-      end
-
-      case piece
-      when b_pawn
-      when b_rook
-      when b_knight
-      when b_bishop
-      when b_queen
-      when b_king
-        def valid_move?(x, y, to)
-          available_moves
+        if -1 < x && x < 8 && y < 7
+          moves << [x - 1, y + 1] if g[x - 1][y + 1].color == "b"
+          moves << [x + 1, y + 1] if g[x + 1][y + 1].color == "b"
+          moves << [x + 1, y + 1] if g[x + 1][y + 1].en_passant && g[x + 1][y + 1].color == "b"
+          moves << [x - 1, y + 1] if g[x - 1][y + 1].en_passant && g[x - 1][y + 1].color == "b"
         end
+      when $w_rook
+      when $w_knight
+      when $w_bishop
+      when $w_queen
+      when $w_king
+      when $b_pawn
+        moves << [x, y - 1] if y - 1 > -1 && g[x][y - 1].read == $empty_space
+        if y == 6
+          moves << [x, y - 2] if g[x][y - 1].read == $empty_space && g[x][y - 2].read == $empty_space
+        end
+        if -1 < x && x < 8 && y > -1
+          moves << [x - 1, y - 1] if g[x - 1][y - 1].color == "w"
+          moves << [x + 1, y - 1] if g[x + 1][y - 1].color == "w"
+          moves << [x + 1, y - 1] if g[x + 1][y - 1].en_passant && g[x + 1][y - 1].color == "w"
+          moves << [x - 1, y - 1] if g[x - 1][y - 1].en_passant && g[x - 1][y - 1].color == "w"
+        end
+      when $b_rook
+      when $b_knight
+      when $b_bishop
+      when $b_queen
+      when $b_king
       end
+      return moves
     end
   end
 end
