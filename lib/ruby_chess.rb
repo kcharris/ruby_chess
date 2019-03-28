@@ -297,6 +297,30 @@ module RubyChess
       return moves
     end
 
+    def check_valid_move
+      copy_game = @g
+      copy_turn = @w_turn
+      #get_player_input
+      player_input = [[0, 3], [0, 5]]
+      moves = moves(player_input[0, 0], player_input[0][1])
+      if moves.length = 0
+        return false
+      end
+      if moves.include?(player_input[1])
+        play_move(player_input)
+        check_for_check
+        if @w_turn
+          if @w_check = true
+            return false
+          end
+        else
+          if @b_check = true
+            return false
+          end
+        end
+      end
+    end
+
     def check_for_check
       (0..7).each do |x|
         (0..7).each do |y|
@@ -327,25 +351,25 @@ module RubyChess
         puts "Not a valit input, please try again."
         player_input = gets.chomp
       end
+      player_input = [[player_input[0].to_i, player_input[1].to_i], [player_input[4].to_i, player_input[5].to_i]]
       return player_input
     end
 
-    def play_move(player_input)
-      # x =
-      # y =
-      # x2 =
-      # y2 =
-      # @g[x2][y2] = @g[x][y]
+    def play_move(p_i)
       # modify pieces if affected by rules, like king moving prevents castling, or activating/ deactivating en_passant and check.
-    end
+      x = p_i[0][0]
+      y = p_i[0][1]
+      x2 = p_i[1][0]
+      y2 = p_i[1][1]
 
-    # def verify_move(moves)
-    #   def self_check
-    #   end
-    # end
+      if @g[x][y].read == $w_king && @w_king_moved == false && x == x2 && y + 2 == y2
+        @g[0][5] = @g[0][7]
+      end
+
+      @g[x2][y2] = @g[x][y]
+    end
   end
 end
 
 include RubyChess
 game = Game.new
-game.prompt
