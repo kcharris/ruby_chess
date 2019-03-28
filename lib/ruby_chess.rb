@@ -302,9 +302,10 @@ module RubyChess
         (0..7).each do |y|
           moves = moves(x, y)
           moves.each do |c|
-            if @g[c[0]][c[1]].read == $b_king && @w_turn
+            if @g[c[0]][c[1]].read == $b_king
               @b_check = true
-            elsif @g[c[0]][c[1]].read == @w_king && !@w_turn
+            end
+            if @g[c[0]][c[1]].read == @w_king
               @w_check = true
             end
           end
