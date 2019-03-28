@@ -41,3 +41,11 @@ players:
 overall game including rules:
 
 #moves will determine available moves based on a locations piece's rules and #wcheck & #bcheck will determine if both a player gets into check and if moves are unavailable after a check.
+
+Problems:
+En_passant activation and deactivation on pawn move and after opponent turn
+Check tracking, self check prevention, testing moves for check, check deactivation.
+Checkmate in no moves prevent check
+draw if no moves available
+Pawn promotion to queen if placed at other end of board.
+Need a prompt for player interaction.

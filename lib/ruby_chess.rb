@@ -101,7 +101,6 @@ module RubyChess
 
     def initialize
       @w_turn = true
-      @b_turn = false
       @w_check = false
       @b_check = false
       @w_king_moved = false
@@ -296,5 +295,17 @@ module RubyChess
       end
       return moves
     end
+
+    def prompt
+      print @board.output
+      puts "Enter a piece location, and an available move to play with two xy coordinates separated by a comma"
+      puts "For Example: xy, xy or 22, 23 would take a piece at 22 and attempt to place it at 23"
+      puts "It is #{@w_turn ? "white's turn." : "black's turn."}"
+      puts "Enter your input: "
+    end
   end
 end
+
+include RubyChess
+game = Game.new
+game.prompt
