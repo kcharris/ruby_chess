@@ -98,7 +98,7 @@ module RubyChess
   end
 
   class Game
-    attr_accessor :board, :w_king_moved
+    attr_accessor :board, :w_king_moved, :b_check
 
     def initialize
       @w_turn = true
@@ -188,9 +188,9 @@ module RubyChess
       when $w_pawn
         moves << [x, y + 1] if y + 1 < 8 && @g[x][y + 1].read == $empty_space
         if y == 1
-          moves << [x, y + 2] if @g[x][y + 1].read == $empty_space && @g[x][y + 2].read == $empty_space
+          moves << [x, y + 2] if y + 2 < 8 && @g[x][y + 1].read == $empty_space && @g[x][y + 2].read == $empty_space
         end
-        if -1 < x && x < 8 && y < 7
+        if -1 < x && x + 1 < 8 && y + 1 < 8
           moves << [x - 1, y + 1] if @g[x - 1][y + 1].color == "b"
           moves << [x + 1, y + 1] if @g[x + 1][y + 1].color == "b"
           moves << [x + 1, y + 1] if @g[x + 1][y + 1].en_passant && @g[x + 1][y + 1].color == "b"
@@ -244,7 +244,7 @@ module RubyChess
         if y == 6
           moves << [x, y - 2] if @g[x][y - 1].read == $empty_space && @g[x][y - 2].read == $empty_space
         end
-        if -1 < x && x < 8 && y > -1
+        if -1 < x && x + 1 < 8 && y - 1 > -1
           moves << [x - 1, y - 1] if @g[x - 1][y - 1].color == "w"
           moves << [x + 1, y - 1] if @g[x + 1][y - 1].color == "w"
           moves << [x + 1, y - 1] if @g[x + 1][y - 1].en_passant && @g[x + 1][y - 1].color == "w"
@@ -297,6 +297,21 @@ module RubyChess
       return moves
     end
 
+    def check_for_check
+      (0..7).each do |x|
+        (0..7).each do |y|
+          moves = moves(x, y)
+          moves.each do |c|
+            if @g[c[0]][c[1]].read == $b_king && @w_turn
+              @b_check = true
+            elsif @g[c[0]][c[1]].read == @w_king && !@w_turn
+              @w_check = true
+            end
+          end
+        end
+      end
+    end
+
     def prompt
       print @board.output
       puts "Enter a piece location, and an available move to play with two xy coordinates separated by a comma"
@@ -314,8 +329,19 @@ module RubyChess
       return player_input
     end
 
-    def self_check
+    def play_move(player_input)
+      # x =
+      # y =
+      # x2 =
+      # y2 =
+      # @g[x2][y2] = @g[x][y]
+      # modify pieces if affected by rules, like king moving prevents castling, or activating/ deactivating en_passant and check.
     end
+
+    # def verify_move(moves)
+    #   def self_check
+    #   end
+    # end
   end
 end
 

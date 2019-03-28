@@ -45,7 +45,9 @@ overall game including rules:
 Problems:
 En_passant activation and deactivation on pawn move and after opponent turn
 Check tracking, self check prevention, testing moves for check, check deactivation.
-Checkmate in no moves prevent check
+Checkmate if no moves prevent check
 draw if no moves available
 Pawn promotion to queen if placed at other end of board.
-board output to bash has symbols overlapping
+give players option to save the game for later
+allow players to take turns through a play loop
+condence move checks into a more general function.

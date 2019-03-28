@@ -63,4 +63,17 @@ describe "Game" do
       expect(game.moves(4, 7).include?([6, 7])).to eql(true)
     end
   end
+  describe "#check_for_check" do
+    it "modifies a variable if king opponent king in check" do
+      game = Game.new
+      game.board.grid[3][2] = Piece.new($b_king)
+      game.check_for_check
+      expect(game.b_check).to eql(true)
+    end
+    it "makes sure checks are set to false at beginning" do
+      game = Game.new
+      game.check_for_check
+      expect(game.b_check).to eql(false)
+    end
+  end
 end
