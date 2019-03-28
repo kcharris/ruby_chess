@@ -48,4 +48,4 @@ Check tracking, self check prevention, testing moves for check, check deactivati
 Checkmate in no moves prevent check
 draw if no moves available
 Pawn promotion to queen if placed at other end of board.
-Need a prompt for player interaction.
+board output to bash has symbols overlapping

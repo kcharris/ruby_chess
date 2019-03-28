@@ -303,9 +303,22 @@ module RubyChess
       puts "It is #{@w_turn ? "white's turn." : "black's turn."}"
       puts "Enter your input: "
     end
+
+    def get_player_input
+      player_input = gets.chomp
+      until player_input =~ /^[0-7]{2}, [0-7]{2}$/
+        puts "Not a valit input, please try again."
+        player_input = gets.chomp
+      end
+      return player_input
+    end
+
+    def self_check
+    end
   end
 end
 
 include RubyChess
 game = Game.new
 game.prompt
+game.get_player_input
