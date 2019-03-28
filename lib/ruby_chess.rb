@@ -13,6 +13,7 @@ module RubyChess
   $b_knight = "\u265E".encode("utf-8")
   $b_pawn = "\u265F".encode("utf-8")
   $empty_space = "\u26DD".encode("utf-8")
+  $hair_spacing = "\u200A".encode("utf-8")
 
   class Board
     attr_accessor :grid
@@ -70,9 +71,9 @@ module RubyChess
       @output = ""
       count = 7
       (0..7).each do |y|
-        @output += "#{count} |"
+        @output += "#{count.to_s + $hair_spacing + "|"}"
         (0..7).each do |x|
-          @output += "#{@grid[x][y].read}|"
+          @output += "#{@grid[x][y].read + $hair_spacing + "|"}"
         end
         @output += "\n"
         count -= 1
@@ -321,4 +322,3 @@ end
 include RubyChess
 game = Game.new
 game.prompt
-game.get_player_input
