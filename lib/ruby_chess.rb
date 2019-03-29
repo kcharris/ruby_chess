@@ -297,11 +297,8 @@ module RubyChess
       return moves
     end
 
-    def check_valid_move
-      copy_game = @g
-      copy_turn = @w_turn
-      #get_player_input
-      player_input = [[0, 3], [0, 5]]
+    def valid_move?(player_input)
+      game_copy = @g
       moves = moves(player_input[0, 0], player_input[0][1])
       if moves.length = 0
         return false
@@ -309,6 +306,7 @@ module RubyChess
       if moves.include?(player_input[1])
         play_move(player_input)
         check_for_check
+        @g = game_copy
         if @w_turn
           if @w_check == true
             return false
