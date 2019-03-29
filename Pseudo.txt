@@ -44,6 +44,7 @@ overall game including rules:
 
 Problems:
 the reverse color of the piece I'm trying to move is being deleted and not being placed in the correct location
+in addition to that I'm pointing to past instances of an object when trying to copy a piece to a new location and then deleting the location the piece was at. I can fix this by creating new Pieces, and toggling en_passant after creating new version.
 
 En_passant deactivation on pawn move and after opponent turn
 Check tracking, self check prevention, testing moves for check, check deactivation.
@@ -53,3 +54,6 @@ Pawn promotion to queen if placed at other end of board.
 give players option to save the game for later
 allow players to take turns through a play loop
 condence move checks into a more general function.
+
+Interesting:
+Durring the project I encountered a problem where I was pointing to pieces that I wanted to copy, then deleting the initial location and deleting my copy as well. What I had to do was begin a new instance of a class instead of coping the object directly.
