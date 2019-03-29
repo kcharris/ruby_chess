@@ -310,11 +310,11 @@ module RubyChess
         play_move(player_input)
         check_for_check
         if @w_turn
-          if @w_check = true
+          if @w_check == true
             return false
           end
         else
-          if @b_check = true
+          if @b_check == true
             return false
           end
         end
@@ -356,20 +356,51 @@ module RubyChess
     end
 
     def play_move(p_i)
-      # modify pieces if affected by rules, like king moving prevents castling, or activating/ deactivating en_passant and check.
+      # need to  add way to deactivate en_passant and check.
       x = p_i[0][0]
       y = p_i[0][1]
       x2 = p_i[1][0]
       y2 = p_i[1][1]
-
+      
+      #these four handle moving king for castling
       if @g[x][y].read == $w_king && @w_king_moved == false && x == x2 && y + 2 == y2
-        @g[0][5] = @g[0][7]
+        @g[x2][y2] = @g[x][y]
+        @g[x][y] = Piece.new($empty_space)
+        @g[5][0] = @g[7][0]
+        @g[7][0] = Piece.new($empty_space)
+      elsif @g[x][y].read == $w_king && @w_king_moved == false && x == x2 && y - 2 == y2
+        @g[x2][y2] = @g[x][y]
+        @g[x][y] = Piece.new($empty_space)
+        @g[3][0] = @g[0][0]
+        @g[0][0] = Piece.new($empty_space)
+      elsif @g[x][y].read == $b_king && @b_king_moved == false && x == x2 && y + 2 == y2
+        @g[x2][y2] = @g[x][y]
+        @g[x][y] = Piece.new($empty_space)
+        @g[5][7] = @g[7][7]
+        @g[7][7] = Piece.new($empty_space)
+      elsif @g[x][y].read == $b_king && @b_king_moved == false && x == x2 && y - 2 == y2
+        @g[x2][y2] = @g[x][y]
+        @g[x][y] = Piece.new($empty_space)
+        @g[3][7] = @g[0][7]
+        @g[0][7] = Piece.new($empty_space)
+      #moves pawns 2 spaces
+      elsif @g[x][y].read == $pawn && y2 - y == 2
+        @g[x2][y2] = @g[x][y]
+        @g[x][y] = Piece.new($empty_space)
+        @g[x2][y2].en_passant = true
+      else
+        @g[x2][y2] = @g[x][y]
+        @g[x][y] = Piece.new($empty_space)
+        if @g[x][y].read == $w_king
+          @w_king_moved = true
+        elsif @g[x][y].read == $b_king
+          @b_king_moved = true
+        end
       end
-
-      @g[x2][y2] = @g[x][y]
     end
   end
 end
 
 include RubyChess
 game = Game.new
+game.prompt
