@@ -304,8 +304,8 @@ module RubyChess
 
     def valid_move?(player_input)
       game_copy = @g
-      move = moves(player_input[0, 0], player_input[0][1])
-      if move.length = 0
+      move = moves(player_input[0][0], player_input[0][1])
+      if move.length == 0
         return false
       end
       if move.include?(player_input[1])
@@ -415,7 +415,7 @@ module RubyChess
     def game_loop
       while true
         prompt
-        p_m = get_player_input
+        p_m = get_player_input(gets.chomp)
         case p_m
         when "save"
           print "no save option yet\n"
@@ -426,7 +426,7 @@ module RubyChess
         else
           if valid_move?(p_m)
             play_move(p_m)
-            @w_turn += false
+            @w_turn = !@w_turn
           end
         end
       end
@@ -436,3 +436,4 @@ end
 
 include RubyChess
 game = Game.new
+game.game_loop
