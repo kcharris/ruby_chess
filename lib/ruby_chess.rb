@@ -320,6 +320,8 @@ module RubyChess
     end
 
     def check_for_check
+      @b_check = false
+      @w_check = false
       (0..7).each do |x|
         (0..7).each do |y|
           moves = moves(x, y)
