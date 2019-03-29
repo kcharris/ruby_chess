@@ -78,6 +78,11 @@ module RubyChess
         @output += "\n"
         count -= 1
       end
+      @output += "   "
+      (0..7).each do |n|
+        @output += "#{n.to_s + $hair_spacing + " "}"
+      end
+      @output += "\n"
       return @output
     end
   end
@@ -307,6 +312,7 @@ module RubyChess
         play_move(player_input)
         check_for_check
         @g = game_copy
+        #below handles two situations. If you start in check or put self in check.
         if @w_turn
           if @w_check == true
             return false
@@ -317,6 +323,7 @@ module RubyChess
           end
         end
       end
+      return true
     end
 
     def check_for_check
@@ -405,9 +412,29 @@ module RubyChess
         end
       end
     end
+
+    def game_loop
+      while true
+        prompt
+        p_m = get_player_input
+        case p_m
+        when "save"
+          print "no save option yet\n"
+        when "draw"
+          print "no draw option yet\n"
+        when "load"
+          print "no load option yet\n"
+        else
+          if valid_move?(p_m)
+            play_move(p_m)
+            @w_turn += false
+          end
+        end
+      end
+    end
   end
 end
 
 include RubyChess
 game = Game.new
-game.prompt
+game.game_loop
