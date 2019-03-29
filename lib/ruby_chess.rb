@@ -69,14 +69,12 @@ module RubyChess
 
     def output
       @output = ""
-      count = 7
-      (0..7).each do |y|
-        @output += "#{count.to_s + $hair_spacing + "|"}"
+      ([7, 6, 5, 4, 3, 2, 1, 0]).each do |y|
+        @output += "#{y.to_s + $hair_spacing + "|"}"
         (0..7).each do |x|
           @output += "#{@grid[x][y].read + $hair_spacing + "|"}"
         end
         @output += "\n"
-        count -= 1
       end
       @output += "   "
       (0..7).each do |n|
@@ -304,6 +302,11 @@ module RubyChess
 
     def valid_move?(player_input)
       game_copy = Array.new(@g)
+      if @w_turn && @g[player_input[0][0]][player_input[0][1]].color != "w"
+        return false
+      elsif !@w_turn && @g[player_input[0][0]][player_input[0][1]].color != "b"
+        return false
+      end
       move = moves(player_input[0][0], player_input[0][1])
       if move.length == 0
         return false
@@ -468,4 +471,3 @@ end
 
 include RubyChess
 game = Game.new
-game.game_loop

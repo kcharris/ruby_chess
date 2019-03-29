@@ -82,8 +82,6 @@ describe "Game" do
       expect(game.get_player_input("01, 03")).to eql([[0, 1], [0, 3]])
     end
   end
-  describe "#valid_move?" do
-  end
   describe "#play_move" do
     it "places a pawn forward 1" do 
       game = Game.new
@@ -91,24 +89,31 @@ describe "Game" do
       expect(game.board.grid[1][2].read).to eql($w_pawn)
     end
     it "moves a w pawn 2 forward" do
-      game = Game.new
-      game.play_move([[0, 1], [0, 3]])
-      expect(game.board.grid[0][3].read).to eql($w_pawn)
+        game = Game.new
+        game.play_move([[0, 1], [0, 3]])
+        expect(game.board.grid[0][3].read).to eql($w_pawn)
     end
     it "activates en_passant on pawn when moving 2 spaces" do
-      game = Game.new
-      game.play_move([[0, 1], [0, 3]])
-      expect(game.board.grid[0][3].en_passant).to eql(true)
+        game = Game.new
+        game.play_move([[0, 1], [0, 3]])
+        expect(game.board.grid[0][3].en_passant).to eql(true)
     end
     it "deletes the rooks original position durring a castle" do
-      game = Game.new
-      game.play_move([[4, 0], [6, 0]])
-      expect(game.board.grid[7][0].read).to eql($empty_space)
+        game = Game.new
+        game.play_move([[4, 0], [6, 0]])
+        expect(game.board.grid[7][0].read).to eql($empty_space)
     end
     it "moves the rook durring a castle" do
+        game = Game.new
+        game.play_move([[4, 0], [6, 0]])
+        expect(game.board.grid[5][0].read).to eql($w_rook)
+    end
+  end
+  describe "#valid_move?" do
+    it "checks that the piece selected is right color" do
       game = Game.new
-      game.play_move([[4, 0], [6, 0]])
-      expect(game.board.grid[5][0].read).to eql($w_rook)
+      move = [[0,1], [0,3]]
+      expect(game.valid_move?(move)).to eql(true)
     end
   end
 end
