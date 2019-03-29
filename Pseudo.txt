@@ -43,6 +43,8 @@ overall game including rules:
 #moves will determine available moves based on a locations piece's rules and #wcheck & #bcheck will determine if both a player gets into check and if moves are unavailable after a check.
 
 Problems:
+the reverse color of the piece I'm trying to move is being deleted and not being placed in the correct location
+
 En_passant deactivation on pawn move and after opponent turn
 Check tracking, self check prevention, testing moves for check, check deactivation.
 Checkmate if no moves prevent check

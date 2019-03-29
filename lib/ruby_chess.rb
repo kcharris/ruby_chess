@@ -369,33 +369,33 @@ module RubyChess
       y2 = p_i[1][1]
 
       #these four handle moving king and rook for castling
-      if @g[x][y].read == $w_king && @w_king_moved == false && x == x2 && y + 2 == y2
-        @g[x2][y2] = @g[x][y]
+      if @g[x][y].read == $w_king && @w_king_moved == false && x + 2 == x2 && y == y2
+        @g[x2][y2] = @g[x][y].clone
         @g[x][y] = Piece.new($empty_space)
-        @g[5][0] = @g[7][0]
+        @g[5][0] = @g[7][0].clone
         @g[7][0] = Piece.new($empty_space)
-      elsif @g[x][y].read == $w_king && @w_king_moved == false && x == x2 && y - 2 == y2
-        @g[x2][y2] = @g[x][y]
+      elsif @g[x][y].read == $w_king && @w_king_moved == false && x - 2 == x2 && y == y2
+        @g[x2][y2] = @g[x][y].clone
         @g[x][y] = Piece.new($empty_space)
-        @g[3][0] = @g[0][0]
+        @g[3][0] = @g[0][0].clone
         @g[0][0] = Piece.new($empty_space)
-      elsif @g[x][y].read == $b_king && @b_king_moved == false && x == x2 && y + 2 == y2
-        @g[x2][y2] = @g[x][y]
+      elsif @g[x][y].read == $b_king && @b_king_moved == false && x + 2 == x2 && y == y2
+        @g[x2][y2] = @g[x][y].clone
         @g[x][y] = Piece.new($empty_space)
-        @g[5][7] = @g[7][7]
+        @g[5][7] = @g[7][7].clone
         @g[7][7] = Piece.new($empty_space)
-      elsif @g[x][y].read == $b_king && @b_king_moved == false && x == x2 && y - 2 == y2
-        @g[x2][y2] = @g[x][y]
+      elsif @g[x][y].read == $b_king && @b_king_moved == false && x -2 == x2 && y == y2
+        @g[x2][y2] = @g[x][y].clone
         @g[x][y] = Piece.new($empty_space)
-        @g[3][7] = @g[0][7]
+        @g[3][7] = @g[0][7].clone
         @g[0][7] = Piece.new($empty_space)
         # moves pawns 2 spaces and activates en passant
-      elsif @g[x][y].read == $pawn && y2 - y == 2
-        @g[x2][y2] = @g[x][y]
+      elsif @g[x][y].read == ($w_pawn || $b_pawn) && y2 - y == 2
+        @g[x2][y2] = @g[x][y].clone
         @g[x][y] = Piece.new($empty_space)
         @g[x2][y2].en_passant = true
       else
-        @g[x2][y2] = @g[x][y]
+        @g[x2][y2] = @g[x][y].clone
         @g[x][y] = Piece.new($empty_space)
         #if king is being moved record it
         if @g[x][y].read == $w_king
@@ -427,6 +427,8 @@ module RubyChess
           if valid_move?(p_m)
             play_move(p_m)
             @w_turn = !@w_turn
+          else 
+            print "Enter a valid move 1\n"
           end
         end
       end
@@ -436,4 +438,3 @@ end
 
 include RubyChess
 game = Game.new
-game.game_loop
