@@ -303,7 +303,7 @@ module RubyChess
     end
 
     def valid_move?(player_input)
-      game_copy = @g
+      game_copy = Array.new(@g)
       move = moves(player_input[0][0], player_input[0][1])
       if move.length == 0
         return false
@@ -322,8 +322,9 @@ module RubyChess
             return false
           end
         end
+        return true
       end
-      return true
+      return false
     end
 
     def check_for_check
@@ -467,3 +468,4 @@ end
 
 include RubyChess
 game = Game.new
+game.game_loop
