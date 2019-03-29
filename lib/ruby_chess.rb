@@ -304,11 +304,11 @@ module RubyChess
 
     def valid_move?(player_input)
       game_copy = @g
-      moves = moves(player_input[0, 0], player_input[0][1])
-      if moves.length = 0
+      move = moves(player_input[0, 0], player_input[0][1])
+      if move.length = 0
         return false
       end
-      if moves.include?(player_input[1])
+      if move.include?(player_input[1])
         play_move(player_input)
         check_for_check
         @g = game_copy
@@ -352,8 +352,7 @@ module RubyChess
       puts "Enter your input: "
     end
 
-    def get_player_input
-      player_input = gets.chomp
+    def get_player_input(player_input)
       until player_input =~ /^[0-7]{2}, [0-7]{2}$/
         puts "Not a valit input, please try again."
         player_input = gets.chomp
@@ -437,4 +436,3 @@ end
 
 include RubyChess
 game = Game.new
-game.game_loop

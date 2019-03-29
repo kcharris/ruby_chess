@@ -76,4 +76,10 @@ describe "Game" do
       expect(game.b_check).to eql(false)
     end
   end
+  describe "#get_player_input" do
+    it "returns an array of two separate coordinate arrays with integers" do
+      game = Game.new
+      expect(game.get_player_input("01, 03")).to eql([[0,1],[0,3]])
+    end
+  end
 end
