@@ -193,8 +193,8 @@ module RubyChess
         if -1 < x && x + 1 < 8 && y + 1 < 8
           moves << [x - 1, y + 1] if @g[x - 1][y + 1].color == "b"
           moves << [x + 1, y + 1] if @g[x + 1][y + 1].color == "b"
-          moves << [x + 1, y + 1] if @g[x + 1][y + 1].en_passant && @g[x + 1][y + 1].color == "b"
-          moves << [x - 1, y + 1] if @g[x - 1][y + 1].en_passant && @g[x - 1][y + 1].color == "b"
+          moves << [x + 1, y + 1] if @g[x + 1][y].en_passant && @g[x + 1][y].color == "b"
+          moves << [x - 1, y + 1] if @g[x - 1][y].en_passant && @g[x - 1][y].color == "b"
         end
       when $w_rook
         moves.concat(line("w", x, y, 0, 1))
@@ -247,8 +247,8 @@ module RubyChess
         if -1 < x && x + 1 < 8 && y - 1 > -1
           moves << [x - 1, y - 1] if @g[x - 1][y - 1].color == "w"
           moves << [x + 1, y - 1] if @g[x + 1][y - 1].color == "w"
-          moves << [x + 1, y - 1] if @g[x + 1][y - 1].en_passant && @g[x + 1][y - 1].color == "w"
-          moves << [x - 1, y - 1] if @g[x - 1][y - 1].en_passant && @g[x - 1][y - 1].color == "w"
+          moves << [x + 1, y - 1] if @g[x + 1][y].en_passant && @g[x + 1][y].color == "w"
+          moves << [x - 1, y - 1] if @g[x - 1][y].en_passant && @g[x - 1][y].color == "w"
         end
       when $b_rook
         moves.concat(line("b", x, y, 0, 1))
@@ -361,8 +361,8 @@ module RubyChess
       y = p_i[0][1]
       x2 = p_i[1][0]
       y2 = p_i[1][1]
-      
-      #these four handle moving king for castling
+
+      #these four handle moving king and rook for castling
       if @g[x][y].read == $w_king && @w_king_moved == false && x == x2 && y + 2 == y2
         @g[x2][y2] = @g[x][y]
         @g[x][y] = Piece.new($empty_space)
@@ -383,7 +383,7 @@ module RubyChess
         @g[x][y] = Piece.new($empty_space)
         @g[3][7] = @g[0][7]
         @g[0][7] = Piece.new($empty_space)
-      #moves pawns 2 spaces
+        # moves pawns 2 spaces and activates en passant
       elsif @g[x][y].read == $pawn && y2 - y == 2
         @g[x2][y2] = @g[x][y]
         @g[x][y] = Piece.new($empty_space)
@@ -391,10 +391,17 @@ module RubyChess
       else
         @g[x2][y2] = @g[x][y]
         @g[x][y] = Piece.new($empty_space)
+        #if king is being moved record it
         if @g[x][y].read == $w_king
           @w_king_moved = true
         elsif @g[x][y].read == $b_king
           @b_king_moved = true
+        end
+        #makes sure piece with en_passant active is deleted when trying to take
+        if @g[x][y].read == $w_pawn && @g[x2][y2 - 1].en_passant == true
+          @g[x2][y2 - 1] == Piece.new($empty_space)
+        elsif @g[x][y].read == $w_pawn && @g[x2][y2 + 1].en_passant == true
+          @g[x2][y2 + 1] == Piece.new($empty_space)
         end
       end
     end
