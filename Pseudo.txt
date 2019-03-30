@@ -43,16 +43,11 @@ overall game including rules:
 #moves will determine available moves based on a locations piece's rules and #wcheck & #bcheck will determine if both a player gets into check and if moves are unavailable after a check.
 
 Problems:
-The colors seem to be swapped and the xy coordinates don't relate to the outside y coordinate line.
-
-En_passant deactivation on pawn move and after opponent turn
-Check tracking, self check prevention, testing moves for check, check deactivation.
 Checkmate if no moves prevent check
 draw if no moves available
 Pawn promotion to queen if placed at other end of board.
 give players option to save the game for later
-allow players to take turns through a play loop
-condence move checks into a more general function.
 
 Interesting:
 Durring the project I encountered a problem where I was pointing to pieces that I wanted to copy, then deleting the initial location and deleting my copy as well. What I had to do was begin a new instance of a class instead of coping the object directly.
+I had kept a variable in a function that would keep destroying itself after it was done, like it should, but I expected the non instance variable to still exist and for me to continuously add to it.

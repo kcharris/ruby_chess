@@ -107,6 +107,7 @@ module RubyChess
       @w_turn = true
       @w_check = false
       @b_check = false
+      @tracker = {}
       @w_king_moved = false
       @b_king_moved = false
       @board = Board.new
@@ -443,6 +444,25 @@ module RubyChess
           @g[x2][y2 + 1] == Piece.new($empty_space)
         end
       end
+      if @g[x2][y2].read == $w_pawn && y2 == 7
+        @g[x2][y2] = Piece.new($w_queen)
+      elsif @g[x2][y2].read == $b_pawn && y2 == 0
+        @g[x2][y2] = Piece.new($b_queen)
+      end
+    end
+
+    def en_passant_deactivator(player_move)
+      x = player_move[1][0]
+      y = player_move[1][1]
+      if @g[x][y].en_passant == true && @tracker[x.to_s + y.to_s] == nil
+        @tracker[x.to_s + y.to_s] = 0
+      end
+      @tracker.each_key do |key|
+        @tracker[key] += 1
+        if @tracker[key] == 2
+          @g[key[0].to_i][key[1].to_i].en_passant = false
+        end
+      end
     end
 
     def game_loop
@@ -459,9 +479,10 @@ module RubyChess
         else
           if valid_move?(p_m)
             play_move(p_m)
+            en_passant_deactivator
             @w_turn = !@w_turn
           else
-            print "Enter a valid move 1\n"
+            print "Enter a valid move \n"
           end
         end
       end
