@@ -112,7 +112,7 @@ describe "Game" do
       game = Game.new
       game.board.grid[0][6] = Piece.new($w_pawn)
       game.board.grid[0][7] = Piece.new($empty_space)
-      game.play_move([[0,6],[0,7]])
+      game.play_move([[0, 6], [0, 7]])
       expect(game.board.grid[0][7].read).to eql($w_queen)
     end
   end
@@ -121,6 +121,12 @@ describe "Game" do
       game = Game.new
       move = [[0, 6], [0, 5]]
       expect(game.valid_move?(move)).to eql(false)
+    end
+    it "does not change the board permanently through play move if true" do
+      game = Game.new
+      game.valid_move?([[4, 1], [4, 2]])
+      game.prompt
+      expect(game.board.grid[4][1].color).to eql("w")
     end
   end
   describe "#en_passant_deactivator" do

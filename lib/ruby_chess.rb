@@ -124,9 +124,9 @@ module RubyChess
         opponent_hit = false
         same_color = false
         while new_x < 8 && new_x > -1 && new_y < 8 && new_y > -1 && opponent_hit != true && same_color != true
-          if @g[new_x][new_y].read == $empty_space
+          if @board.grid[new_x][new_y].read == $empty_space
             line_moves << [new_x, new_y]
-          elsif @g[new_x][new_y].color == @g[x][y].color
+          elsif @board.grid[new_x][new_y].color == @board.grid[x][y].color
             same_color = true
           else
             line_moves << [new_x, new_y]
@@ -143,21 +143,21 @@ module RubyChess
         (1..8).each do |n|
           case n
           when 1
-            moves << [x + 1, y + 2] if x < 7 && y < 6 && @g[x + 1][y + 2].color != @g[x][y].color
+            moves << [x + 1, y + 2] if x < 7 && y < 6 && @board.grid[x + 1][y + 2].color != @board.grid[x][y].color
           when 2
-            moves << [x + 2, y + 1] if x < 6 && y < 7 && @g[x + 2][y + 1].color != @g[x][y].color
+            moves << [x + 2, y + 1] if x < 6 && y < 7 && @board.grid[x + 2][y + 1].color != @board.grid[x][y].color
           when 3
-            moves << [x + 2, y - 1] if x < 6 && y > 0 && @g[x + 2][y - 1].color != @g[x][y].color
+            moves << [x + 2, y - 1] if x < 6 && y > 0 && @board.grid[x + 2][y - 1].color != @board.grid[x][y].color
           when 4
-            moves << [x + 1, y - 2] if x < 7 && y > 1 && @g[x + 1][y - 2].color != @g[x][y].color
+            moves << [x + 1, y - 2] if x < 7 && y > 1 && @board.grid[x + 1][y - 2].color != @board.grid[x][y].color
           when 5
-            moves << [x - 1, y - 2] if x > 0 && y > 1 && @g[x - 1][y - 2].color != @g[x][y].color
+            moves << [x - 1, y - 2] if x > 0 && y > 1 && @board.grid[x - 1][y - 2].color != @board.grid[x][y].color
           when 6
-            moves << [x - 2, y - 1] if x > 1 && y > 0 && @g[x - 2][y - 1].color != @g[x][y].color
+            moves << [x - 2, y - 1] if x > 1 && y > 0 && @board.grid[x - 2][y - 1].color != @board.grid[x][y].color
           when 7
-            moves << [x - 2, y + 1] if x > 1 && y < 7 && @g[x - 2][y + 1].color != @g[x][y].color
+            moves << [x - 2, y + 1] if x > 1 && y < 7 && @board.grid[x - 2][y + 1].color != @board.grid[x][y].color
           when 8
-            moves << [x - 1, y + 2] if x > 0 && y < 6 && @g[x - 1][y + 2].color != @g[x][y].color
+            moves << [x - 1, y + 2] if x > 0 && y < 6 && @board.grid[x - 1][y + 2].color != @board.grid[x][y].color
           end
         end
         return moves
@@ -168,37 +168,37 @@ module RubyChess
         8.times do |n|
           case n
           when 0
-            moves << [x, y + 1] if y < 7 && @g[x][y + 1].color != @g[x][y].color
+            moves << [x, y + 1] if y < 7 && @board.grid[x][y + 1].color != @board.grid[x][y].color
           when 1
-            moves << [x + 1, y + 1] if x < 7 && y < 7 && @g[x + 1][y + 1].color != @g[x][y].color
+            moves << [x + 1, y + 1] if x < 7 && y < 7 && @board.grid[x + 1][y + 1].color != @board.grid[x][y].color
           when 2
-            moves << [x + 1, y] if x < 7 && @g[x + 1][y].color != @g[x][y].color
+            moves << [x + 1, y] if x < 7 && @board.grid[x + 1][y].color != @board.grid[x][y].color
           when 3
-            moves << [x + 1, y - 1] if x < 7 && y > 0 && @g[x + 1][y - 1].color != @g[x][y].color
+            moves << [x + 1, y - 1] if x < 7 && y > 0 && @board.grid[x + 1][y - 1].color != @board.grid[x][y].color
           when 4
-            moves << [x, y - 1] if y > 0 && @g[x][y - 1].color != @g[x][y].color
+            moves << [x, y - 1] if y > 0 && @board.grid[x][y - 1].color != @board.grid[x][y].color
           when 5
-            moves << [x - 1, y - 1] if x > 0 && y > 0 && @g[x - 1][y - 1].color != @g[x][y].color
+            moves << [x - 1, y - 1] if x > 0 && y > 0 && @board.grid[x - 1][y - 1].color != @board.grid[x][y].color
           when 6
-            moves << [x - 1, y] if x > 0 && @g[x - 1][y].color != @g[x][y].color
+            moves << [x - 1, y] if x > 0 && @board.grid[x - 1][y].color != @board.grid[x][y].color
           when 7
-            moves << [x - 1, y + 1] if x > 0 && y < 7 && @g[x - 1][y + 1].color != @g[x][y].color
+            moves << [x - 1, y + 1] if x > 0 && y < 7 && @board.grid[x - 1][y + 1].color != @board.grid[x][y].color
           end
         end
         return moves
       end
 
-      case @g[x][y].read
+      case @board.grid[x][y].read
       when $w_pawn
-        moves << [x, y + 1] if y + 1 < 8 && @g[x][y + 1].read == $empty_space
+        moves << [x, y + 1] if y + 1 < 8 && @board.grid[x][y + 1].read == $empty_space
         if y == 1
-          moves << [x, y + 2] if y + 2 < 8 && @g[x][y + 1].read == $empty_space && @g[x][y + 2].read == $empty_space
+          moves << [x, y + 2] if y + 2 < 8 && @board.grid[x][y + 1].read == $empty_space && @board.grid[x][y + 2].read == $empty_space
         end
         if -1 < x && x + 1 < 8 && y + 1 < 8
-          moves << [x - 1, y + 1] if @g[x - 1][y + 1].color == "b"
-          moves << [x + 1, y + 1] if @g[x + 1][y + 1].color == "b"
-          moves << [x + 1, y + 1] if @g[x + 1][y].en_passant && @g[x + 1][y].color == "b"
-          moves << [x - 1, y + 1] if @g[x - 1][y].en_passant && @g[x - 1][y].color == "b"
+          moves << [x - 1, y + 1] if @board.grid[x - 1][y + 1].color == "b"
+          moves << [x + 1, y + 1] if @board.grid[x + 1][y + 1].color == "b"
+          moves << [x + 1, y + 1] if @board.grid[x + 1][y].en_passant && @board.grid[x + 1][y].color == "b"
+          moves << [x - 1, y + 1] if @board.grid[x - 1][y].en_passant && @board.grid[x - 1][y].color == "b"
         end
       when $w_rook
         moves.concat(line("w", x, y, 0, 1))
@@ -225,18 +225,18 @@ module RubyChess
         moves.concat(king(x, y))
         if @w_king_moved == false && @w_check == false
           count = 0
-          if @g[7][0].read == $w_rook
+          if @board.grid[7][0].read == $w_rook
             (1..2).each do |i|
-              if @g[x + i][y].read == $empty_space
+              if @board.grid[x + i][y].read == $empty_space
                 count += 1
               end
             end
             moves << [x + 2, y] if count == 2
           end
           count = 0
-          if @g[0][0].read == $w_rook
+          if @board.grid[0][0].read == $w_rook
             (1..3).each do |i|
-              if @g[x - i][y].read == $empty_space
+              if @board.grid[x - i][y].read == $empty_space
                 count += 1
               end
             end
@@ -244,15 +244,15 @@ module RubyChess
           end
         end
       when $b_pawn
-        moves << [x, y - 1] if y - 1 > -1 && @g[x][y - 1].read == $empty_space
+        moves << [x, y - 1] if y - 1 > -1 && @board.grid[x][y - 1].read == $empty_space
         if y == 6
-          moves << [x, y - 2] if @g[x][y - 1].read == $empty_space && @g[x][y - 2].read == $empty_space
+          moves << [x, y - 2] if @board.grid[x][y - 1].read == $empty_space && @board.grid[x][y - 2].read == $empty_space
         end
         if -1 < x && x + 1 < 8 && y - 1 > -1
-          moves << [x - 1, y - 1] if @g[x - 1][y - 1].color == "w"
-          moves << [x + 1, y - 1] if @g[x + 1][y - 1].color == "w"
-          moves << [x + 1, y - 1] if @g[x + 1][y].en_passant && @g[x + 1][y].color == "w"
-          moves << [x - 1, y - 1] if @g[x - 1][y].en_passant && @g[x - 1][y].color == "w"
+          moves << [x - 1, y - 1] if @board.grid[x - 1][y - 1].color == "w"
+          moves << [x + 1, y - 1] if @board.grid[x + 1][y - 1].color == "w"
+          moves << [x + 1, y - 1] if @board.grid[x + 1][y].en_passant && @board.grid[x + 1][y].color == "w"
+          moves << [x - 1, y - 1] if @board.grid[x - 1][y].en_passant && @board.grid[x - 1][y].color == "w"
         end
       when $b_rook
         moves.concat(line("b", x, y, 0, 1))
@@ -279,18 +279,18 @@ module RubyChess
         moves.concat(king(x, y))
         if @b_king_moved == false && @b_check == false
           count = 0
-          if @g[7][7].read == $b_rook
+          if @board.grid[7][7].read == $b_rook
             (1..2).each do |i|
-              if @g[x + i][y].read == $empty_space
+              if @board.grid[x + i][y].read == $empty_space
                 count += 1
               end
             end
             moves << [x + 2, y] if count == 2
           end
           count = 0
-          if @g[0][7].read == $b_rook
+          if @board.grid[0][7].read == $b_rook
             (1..3).each do |i|
-              if @g[x - i][y].read == $empty_space
+              if @board.grid[x - i][y].read == $empty_space
                 count += 1
               end
             end
@@ -302,20 +302,29 @@ module RubyChess
     end
 
     def valid_move?(player_input)
-      game_copy = Array.new(@g)
-      if @w_turn && @g[player_input[0][0]][player_input[0][1]].color != "w"
+      game_copy = []
+      8.times { game_copy << [1, 2, 3, 4, 5, 6, 7, 8] }
+      (0..7).each do |x|
+        (0..7).each do |y|
+          game_copy[x][y] = Piece.new(@board.grid[x][y].read)
+        end
+      end
+      if @w_turn && @board.grid[player_input[0][0]][player_input[0][1]].color != "w"
         return false
-      elsif !@w_turn && @g[player_input[0][0]][player_input[0][1]].color != "b"
+      elsif !@w_turn && @board.grid[player_input[0][0]][player_input[0][1]].color != "b"
         return false
       end
       move = moves(player_input[0][0], player_input[0][1])
-      if move.length == 0
-        return false
-      end
       if move.include?(player_input[1])
         play_move(player_input)
         check_for_check
-        @g = game_copy
+        @board.grid = game_copy
+        # 8.times { game_copy << [1, 2, 3, 4, 5, 6, 7, 8] }
+        # (0..7).each do |x|
+        #   (0..7).each do |y|
+        #     game_copy[x][y] = Piece.new(@board.grid[x][y].read)
+        #   end
+        # end
         #below handles two situations. If you start in check or put self in check.
         if @w_turn
           if @w_check == true
@@ -338,10 +347,10 @@ module RubyChess
         (0..7).each do |y|
           moves = moves(x, y)
           moves.each do |c|
-            if @g[c[0]][c[1]].read == $b_king
+            if @board.grid[c[0]][c[1]].read == $b_king
               @b_check = true
             end
-            if @g[c[0]][c[1]].read == @w_king
+            if @board.grid[c[0]][c[1]].read == @w_king
               @w_check = true
             end
           end
@@ -366,101 +375,132 @@ module RubyChess
       return player_input
     end
 
+    def game_end
+      has_moves = false
+      (0..7).each do |x|
+        (0..7).each do |y|
+          spots = moves(x, y)
+          move = spots.select { |spot| valid_move?([[x, y], spot]) }
+          if @w_turn && @board.grid[x][y].color == "w"
+            has_moves = true if move.length > 0
+          elsif !@w_turn && @board.grid[x][y].color == "b"
+            has_moves = true if move.length > 0
+          end
+        end
+      end
+      if has_moves == false && @w_turn
+        if @w_check == true
+          print "B has won the game!\n"
+        else
+          print "The game ends in a draw!\n"
+        end
+      elsif has_moves == false && !@w_turn
+        if @b_check == true
+          print "W has won the game!\n"
+        else
+          print "The game ends in a draw!\n"
+        end
+      end
+    end
+
+    def save_game
+      #I have experience in YAML let's try json here
+    end
+
     def play_move(p_i)
-      # need to  add way to deactivate en_passant and check.
       x = p_i[0][0]
       y = p_i[0][1]
       x2 = p_i[1][0]
       y2 = p_i[1][1]
 
       #these four handle moving king and rook for castling
-      if @g[x][y].read == $w_king && @w_king_moved == false && x + 2 == x2 && y == y2
-        @g[x2][y2] = @g[x][y]
-        @g[x][y] = Piece.new($empty_space)
-        @g[5][0] = @g[7][0]
-        @g[7][0] = Piece.new($empty_space)
-      elsif @g[x][y].read == $w_king && @w_king_moved == false && x - 2 == x2 && y == y2
-        @g[x2][y2] = @g[x][y]
-        @g[x][y] = Piece.new($empty_space)
-        @g[3][0] = @g[0][0]
-        @g[0][0] = Piece.new($empty_space)
-      elsif @g[x][y].read == $b_king && @b_king_moved == false && x + 2 == x2 && y == y2
-        @g[x2][y2] = @g[x][y]
-        @g[x][y] = Piece.new($empty_space)
-        @g[5][7] = @g[7][7]
-        @g[7][7] = Piece.new($empty_space)
-      elsif @g[x][y].read == $b_king && @b_king_moved == false && x - 2 == x2 && y == y2
-        @g[x2][y2] = @g[x][y]
-        @g[x][y] = Piece.new($empty_space)
-        @g[3][7] = @g[0][7]
-        @g[0][7] = Piece.new($empty_space)
+      if @board.grid[x][y].read == $w_king && @w_king_moved == false && x + 2 == x2 && y == y2
+        @board.grid[x2][y2] = Piece.new($w_king)
+        @board.grid[x][y] = Piece.new($empty_space)
+        @board.grid[5][0] = Piece.new($w_rook)
+        @board.grid[7][0] = Piece.new($empty_space)
+      elsif @board.grid[x][y].read == $w_king && @w_king_moved == false && x - 2 == x2 && y == y2
+        @board.grid[x2][y2] = Piece.new($w_king)
+        @board.grid[x][y] = Piece.new($empty_space)
+        @board.grid[3][0] = Piece.new($w_rook)
+        @board.grid[0][0] = Piece.new($empty_space)
+      elsif @board.grid[x][y].read == $b_king && @b_king_moved == false && x + 2 == x2 && y == y2
+        @board.grid[x2][y2] = Piece.new($b_king)
+        @board.grid[x][y] = Piece.new($empty_space)
+        @board.grid[5][7] = Piece.new($b_rook)
+        @board.grid[7][7] = Piece.new($empty_space)
+      elsif @board.grid[x][y].read == $b_king && @b_king_moved == false && x - 2 == x2 && y == y2
+        @board.grid[x2][y2] = Piece.new($b_king)
+        @board.grid[x][y] = Piece.new($empty_space)
+        @board.grid[3][7] = Piece.new($b_rook)
+        @board.grid[0][7] = Piece.new($empty_space)
         # moves pawns 2 spaces and activates en passant
-      elsif @g[x][y].read == $w_pawn && y2 - y == 2
-        @g[x2][y2] = Piece.new($w_pawn)
-        @g[x][y] = Piece.new($empty_space)
-        @g[x2][y2].en_passant = true
-      elsif @g[x][y].read == $b_pawn && y - y2 == 2
-        @g[x2][y2] = Piece.new($b_pawn)
-        @g[x][y] = Piece.new($empty_space)
-        @g[x2][y2].en_passant = true
+      elsif @board.grid[x][y].read == $w_pawn && y2 - y == 2
+        @board.grid[x2][y2] = Piece.new($w_pawn)
+        @board.grid[x][y] = Piece.new($empty_space)
+        @board.grid[x2][y2].en_passant = true
+      elsif @board.grid[x][y].read == $b_pawn && y - y2 == 2
+        @board.grid[x2][y2] = Piece.new($b_pawn)
+        @board.grid[x][y] = Piece.new($empty_space)
+        @board.grid[x2][y2].en_passant = true
       else
-        case @g[x][y].read
+        case @board.grid[x][y].read
         when $w_pawn
-          @g[x2][y2] = Piece.new($w_pawn)
+          @board.grid[x2][y2] = Piece.new($w_pawn)
         when $w_rook
-          @g[x2][y2] = Piece.new($w_rook)
+          @board.grid[x2][y2] = Piece.new($w_rook)
         when $w_knight
-          @g[x2][y2] = Piece.new($w_knight)
+          @board.grid[x2][y2] = Piece.new($w_knight)
         when $w_bishop
-          @g[x2][y2] = Piece.new($w_bishop)
+          @board.grid[x2][y2] = Piece.new($w_bishop)
         when $w_queen
-          @g[x2][y2] = Piece.new($w_queen)
+          @board.grid[x2][y2] = Piece.new($w_queen)
         when $w_king
-          @g[x2][y2] = Piece.new($w_king)
+          @board.grid[x2][y2] = Piece.new($w_king)
         when $b_pawn
-          @g[x2][y2] = Piece.new($b_pawn)
+          @board.grid[x2][y2] = Piece.new($b_pawn)
         when $b_rook
-          @g[x2][y2] = Piece.new($b_rook)
+          @board.grid[x2][y2] = Piece.new($b_rook)
         when $b_knight
-          @g[x2][y2] = Piece.new($b_knight)
+          @board.grid[x2][y2] = Piece.new($b_knight)
         when $b_bishop
-          @g[x2][y2] = Piece.new($b_bishop)
+          @board.grid[x2][y2] = Piece.new($b_bishop)
         when $b_queen
-          @g[x2][y2] = Piece.new($b_queen)
+          @board.grid[x2][y2] = Piece.new($b_queen)
         when $b_king
-          @g[x2][y2] = Piece.new($b_king)
+          @board.grid[x2][y2] = Piece.new($b_king)
         end
-        @g[x][y] = Piece.new($empty_space)
+        @board.grid[x][y] = Piece.new($empty_space)
         #if king is being moved record it
-        if @g[x][y].read == $w_king
+        if @board.grid[x][y].read == $w_king
           @w_king_moved = true
-        elsif @g[x][y].read == $b_king
+        elsif @board.grid[x][y].read == $b_king
           @b_king_moved = true
         end
         #makes sure piece with en_passant active is deleted when trying to take
-        if @g[x][y].read == $w_pawn && @g[x2][y2 - 1].en_passant == true
-          @g[x2][y2 - 1] == Piece.new($empty_space)
-        elsif @g[x][y].read == $w_pawn && @g[x2][y2 + 1].en_passant == true
-          @g[x2][y2 + 1] == Piece.new($empty_space)
+        if @board.grid[x][y].read == $w_pawn && @board.grid[x2][y2 - 1].en_passant == true
+          @board.grid[x2][y2 - 1] == Piece.new($empty_space)
+        elsif @board.grid[x][y].read == $w_pawn && @board.grid[x2][y2 + 1].en_passant == true
+          @board.grid[x2][y2 + 1] == Piece.new($empty_space)
         end
       end
-      if @g[x2][y2].read == $w_pawn && y2 == 7
-        @g[x2][y2] = Piece.new($w_queen)
-      elsif @g[x2][y2].read == $b_pawn && y2 == 0
-        @g[x2][y2] = Piece.new($b_queen)
+      if @board.grid[x2][y2].read == $w_pawn && y2 == 7
+        @board.grid[x2][y2] = Piece.new($w_queen)
+      elsif @board.grid[x2][y2].read == $b_pawn && y2 == 0
+        @board.grid[x2][y2] = Piece.new($b_queen)
       end
     end
 
     def en_passant_deactivator(player_move)
       x = player_move[1][0]
       y = player_move[1][1]
-      if @g[x][y].en_passant == true && @tracker[x.to_s + y.to_s] == nil
+      if @board.grid[x][y].en_passant == true && @tracker[x.to_s + y.to_s] == nil
         @tracker[x.to_s + y.to_s] = 0
       end
       @tracker.each_key do |key|
         @tracker[key] += 1
         if @tracker[key] == 2
-          @g[key[0].to_i][key[1].to_i].en_passant = false
+          @board.grid[key[0].to_i][key[1].to_i].en_passant = false
         end
       end
     end
@@ -472,15 +512,14 @@ module RubyChess
         case p_m
         when "save"
           print "no save option yet\n"
-        when "draw"
-          print "no draw option yet\n"
         when "load"
           print "no load option yet\n"
         else
           if valid_move?(p_m)
             play_move(p_m)
-            en_passant_deactivator
+            en_passant_deactivator(p_m)
             @w_turn = !@w_turn
+            game_end
           else
             print "Enter a valid move \n"
           end
@@ -492,3 +531,4 @@ end
 
 include RubyChess
 game = Game.new
+game.game_loop
