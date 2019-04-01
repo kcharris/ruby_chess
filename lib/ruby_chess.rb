@@ -319,13 +319,6 @@ module RubyChess
         play_move(player_input)
         check_for_check
         @board.grid = game_copy
-        # 8.times { game_copy << [1, 2, 3, 4, 5, 6, 7, 8] }
-        # (0..7).each do |x|
-        #   (0..7).each do |y|
-        #     game_copy[x][y] = Piece.new(@board.grid[x][y].read)
-        #   end
-        # end
-        #below handles two situations. If you start in check or put self in check.
         if @w_turn
           if @w_check == true
             return false
