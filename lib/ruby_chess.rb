@@ -1,4 +1,5 @@
 module RubyChess
+  require "YAML"
   $w_pawn = "\u2659".encode("utf-8")
   $w_knight = "\u2658".encode("utf-8")
   $w_bishop = "\u2657".encode("utf-8")
@@ -352,7 +353,7 @@ module RubyChess
     end
 
     def prompt
-      print @board.output
+      print "\n" + @board.output
       puts "Enter a piece location, and an available move to play with two xy coordinates separated by a comma"
       puts "For Example: xy, xy or 22, 23 would take a piece at 22 and attempt to place it at 23"
       puts "It is #{@w_turn ? "white's turn." : "black's turn."}"
@@ -360,11 +361,13 @@ module RubyChess
     end
 
     def get_player_input(player_input)
-      until player_input =~ /^[0-7]{2}, [0-7]{2}$/
+      until player_input =~ /^[0-7]{2}, [0-7]{2}$|^save$|^load$/
         puts "Not a valit input, please try again."
         player_input = gets.chomp
       end
-      player_input = [[player_input[0].to_i, player_input[1].to_i], [player_input[4].to_i, player_input[5].to_i]]
+      unless player_input == "save" || player_input == "load"
+        player_input = [[player_input[0].to_i, player_input[1].to_i], [player_input[4].to_i, player_input[5].to_i]]
+      end
       return player_input
     end
 
@@ -397,7 +400,32 @@ module RubyChess
     end
 
     def save_game
-      #I have experience in YAML let's try json here
+      File.open("save", "w") do |file|
+        game = [@board.grid, @w_turn, @w_check, @b_check, @w_king_moved, @b_king_moved]
+        file.write(YAML::dump(game))
+      end
+    end
+
+    def load_game
+      File.open("save") do |file|
+        game = YAML::load(file)
+        game.each_index do |i|
+          case i
+          when 0
+            @board.grid = game[i]
+          when 1
+            @w_turn = game[i]
+          when 2
+            @w_check = game[i]
+          when 3
+            @b_check = game[i]
+          when 4
+            @w_king_moved = game[i]
+          when 5
+            @b_king_moved = game[i]
+          end
+        end
+      end
     end
 
     def play_move(p_i)
@@ -504,9 +532,11 @@ module RubyChess
         p_m = get_player_input(gets.chomp)
         case p_m
         when "save"
-          print "no save option yet\n"
+          save_game
+          print "Game has been saved\n"
         when "load"
-          print "no load option yet\n"
+          load_game
+          print "Game loaded\n"
         else
           if valid_move?(p_m)
             play_move(p_m)

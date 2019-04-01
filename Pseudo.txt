@@ -43,9 +43,9 @@ overall game including rules:
 #moves will determine available moves based on a locations piece's rules and #wcheck & #bcheck will determine if both a player gets into check and if moves are unavailable after a check.
 
 Problems:
-Checkmate if no moves prevent check
-draw if no moves available
-give players option to save the game for later, and load
+draw needs to be tested
+game needs to wait for player input before starting new game
+the way I have the game set now it's difficult to test games
 
 Interesting:
 Durring the project I encountered a problem where I was pointing to pieces that I wanted to copy, then deleting the initial location and deleting my copy as well as a result. What I had to do was begin a new instance of a class instead of coping the object directly.

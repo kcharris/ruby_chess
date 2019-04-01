@@ -125,7 +125,6 @@ describe "Game" do
     it "does not change the board permanently through play move if true" do
       game = Game.new
       game.valid_move?([[4, 1], [4, 2]])
-      game.prompt
       expect(game.board.grid[4][1].color).to eql("w")
     end
   end
@@ -137,6 +136,18 @@ describe "Game" do
       game.en_passant_deactivator(move)
       game.en_passant_deactivator(move)
       expect(game.board.grid[0][3].en_passant).to eql(false)
+    end
+  end
+  describe "#save_game and #load_game" do
+    it "saves a game and allows it to be loaded back" do
+      game = Game.new
+      game.play_move([[0,1],[0,3]])
+      game.play_move([[0,6],[0,5]])
+      game.play_move([[4,1],[4,2]])
+      game.save_game
+      game = Game.new
+      game.load_game
+      expect(game.board.grid[4][2].read).to eql($w_pawn)
     end
   end
 end
