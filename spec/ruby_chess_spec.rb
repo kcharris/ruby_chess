@@ -62,6 +62,14 @@ describe "Game" do
       end
       expect(game.moves(4, 7).include?([6, 7])).to eql(true)
     end
+    it "checks if en_passant works for w" do
+      game = Game.new
+      game.board.grid[1][3] = Piece.new($b_pawn)
+      game.play_move([[0, 1], [0, 3]])
+      @w_turn = !@w_turn
+      game.en_passant_deactivator([[0, 1], [0, 3]])
+      expect(game.moves(1, 3).include?([0, 2])).to eql(true)
+    end
   end
   describe "#check_for_check" do
     it "modifies a variable if king opponent king in check" do
@@ -98,6 +106,15 @@ describe "Game" do
       game.play_move([[0, 1], [0, 3]])
       expect(game.board.grid[0][3].en_passant).to eql(true)
     end
+    it "allows pawns to take an opposing piece with en_passant active" do
+      game = Game.new
+      game.board.grid[1][3] = Piece.new($b_pawn)
+      game.play_move([[0, 1], [0, 3]])
+      game.en_passant_deactivator([[0, 1], [0, 3]])
+      @w_turn = !@w_turn
+      game.play_move([[1, 3], [0, 2]])
+      expect(game.board.grid[0][2].read).to eql($b_pawn)
+    end
     it "deletes the rooks original position durring a castle" do
       game = Game.new
       game.play_move([[4, 0], [6, 0]])
@@ -127,6 +144,8 @@ describe "Game" do
       game.valid_move?([[4, 1], [4, 2]])
       expect(game.board.grid[4][1].color).to eql("w")
     end
+    it "does not permanently change king moved to true durring checking for check stage" do
+    end
   end
   describe "#en_passant_deactivator" do
     it "deactivates en_passant on a piece after a set amout of time" do
@@ -137,13 +156,20 @@ describe "Game" do
       game.en_passant_deactivator(move)
       expect(game.board.grid[0][3].en_passant).to eql(false)
     end
+    it "makes sure it doesn't immediately deactivate it" do
+      game = Game.new
+      move = [[0, 1], [0, 3]]
+      game.play_move(move)
+      game.en_passant_deactivator(move)
+      expect(game.board.grid[0][3].en_passant).to eql(true)
+    end
   end
   describe "#save_game and #load_game" do
     it "saves a game and allows it to be loaded back" do
       game = Game.new
-      game.play_move([[0,1],[0,3]])
-      game.play_move([[0,6],[0,5]])
-      game.play_move([[4,1],[4,2]])
+      game.play_move([[0, 1], [0, 3]])
+      game.play_move([[0, 6], [0, 5]])
+      game.play_move([[4, 1], [4, 2]])
       game.save_game
       game = Game.new
       game.load_game

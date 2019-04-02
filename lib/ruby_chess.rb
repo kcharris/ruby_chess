@@ -198,8 +198,8 @@ module RubyChess
         if -1 < x && x + 1 < 8 && y + 1 < 8
           moves << [x - 1, y + 1] if @board.grid[x - 1][y + 1].color == "b"
           moves << [x + 1, y + 1] if @board.grid[x + 1][y + 1].color == "b"
-          moves << [x + 1, y + 1] if @board.grid[x + 1][y].en_passant && @board.grid[x + 1][y].color == "b"
-          moves << [x - 1, y + 1] if @board.grid[x - 1][y].en_passant && @board.grid[x - 1][y].color == "b"
+          moves << [x + 1, y + 1] if @board.grid[x + 1][y].en_passant == true && @board.grid[x + 1][y].color == "b"
+          moves << [x - 1, y + 1] if @board.grid[x - 1][y].en_passant == true && @board.grid[x - 1][y].color == "b"
         end
       when $w_rook
         moves.concat(line("w", x, y, 0, 1))
@@ -216,7 +216,7 @@ module RubyChess
       when $w_queen
         moves.concat(line("w", x, y, 0, 1))
         moves.concat(line("w", x, y, 1, 1))
-        moves.concat(line("w", x, y, 0, 1))
+        moves.concat(line("w", x, y, 1, 0))
         moves.concat(line("w", x, y, 1, -1))
         moves.concat(line("w", x, y, 0, -1))
         moves.concat(line("w", x, y, -1, -1))
@@ -270,7 +270,7 @@ module RubyChess
       when $b_queen
         moves.concat(line("b", x, y, 0, 1))
         moves.concat(line("b", x, y, 1, 1))
-        moves.concat(line("b", x, y, 0, 1))
+        moves.concat(line("b", x, y, 1, 0))
         moves.concat(line("b", x, y, 1, -1))
         moves.concat(line("b", x, y, 0, -1))
         moves.concat(line("b", x, y, -1, -1))
@@ -304,12 +304,7 @@ module RubyChess
 
     def valid_move?(player_input)
       game_copy = []
-      8.times { game_copy << [1, 2, 3, 4, 5, 6, 7, 8] }
-      (0..7).each do |x|
-        (0..7).each do |y|
-          game_copy[x][y] = Piece.new(@board.grid[x][y].read)
-        end
-      end
+      8.times { |num| game_copy << Array.new(@board.grid[num]) }
       if @w_turn && @board.grid[player_input[0][0]][player_input[0][1]].color != "w"
         return false
       elsif !@w_turn && @board.grid[player_input[0][0]][player_input[0][1]].color != "b"
@@ -318,13 +313,14 @@ module RubyChess
       move = moves(player_input[0][0], player_input[0][1])
       if move.include?(player_input[1])
         play_move(player_input)
+        #play move here activates king moved before the actual move can take place removing ability to castle.
         check_for_check
         @board.grid = game_copy
         if @w_turn
           if @w_check == true
             return false
           end
-        else
+        elsif !@w_turn
           if @b_check == true
             return false
           end
@@ -375,8 +371,8 @@ module RubyChess
       has_moves = false
       (0..7).each do |x|
         (0..7).each do |y|
-          spots = moves(x, y)
-          move = spots.select { |spot| valid_move?([[x, y], spot]) }
+          move = moves(x, y)
+          move = move.select { |m| valid_move?([[x, y], m]) }
           if @w_turn && @board.grid[x][y].color == "w"
             has_moves = true if move.length > 0
           elsif !@w_turn && @board.grid[x][y].color == "b"
@@ -493,16 +489,16 @@ module RubyChess
         end
         @board.grid[x][y] = Piece.new($empty_space)
         #if king is being moved record it
-        if @board.grid[x][y].read == $w_king
+        if @board.grid[x2][y2].read == $w_king
           @w_king_moved = true
-        elsif @board.grid[x][y].read == $b_king
+        elsif @board.grid[x2][y2].read == $b_king
           @b_king_moved = true
         end
         #makes sure piece with en_passant active is deleted when trying to take
-        if @board.grid[x][y].read == $w_pawn && @board.grid[x2][y2 - 1].en_passant == true
-          @board.grid[x2][y2 - 1] == Piece.new($empty_space)
-        elsif @board.grid[x][y].read == $w_pawn && @board.grid[x2][y2 + 1].en_passant == true
-          @board.grid[x2][y2 + 1] == Piece.new($empty_space)
+        if @board.grid[x2][y2].read == $w_pawn && @board.grid[x2][y2 - 1].en_passant == true
+          @board.grid[x2][y2 - 1] = Piece.new($empty_space)
+        elsif @board.grid[x2][y2].read == $b_pawn && @board.grid[x2][y2 + 1].en_passant == true
+          @board.grid[x2][y2 + 1] = Piece.new($empty_space)
         end
       end
       if @board.grid[x2][y2].read == $w_pawn && y2 == 7
@@ -538,8 +534,14 @@ module RubyChess
           load_game
           print "Game loaded\n"
         else
-          if valid_move?(p_m)
+          if valid_move?(p_m) == true
             play_move(p_m)
+            check_for_check
+            if @w_turn && @b_check
+              print "B is in check"
+            elsif !@w_turn && @w_check
+              print "W is in check"
+            end
             en_passant_deactivator(p_m)
             @w_turn = !@w_turn
             game_end
@@ -554,4 +556,4 @@ end
 
 include RubyChess
 game = Game.new
-game.game_loop
+# game.game_loop
