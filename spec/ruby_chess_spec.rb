@@ -83,6 +83,12 @@ describe "Game" do
       game.check_for_check
       expect(game.b_check).to eql(false)
     end
+    it "makes sure queen can check" do
+      game = Game.new
+      game.board.grid[4][1] = Piece.new($b_queen)
+      game.check_for_check
+      expect(game.w_check).to eql(true)
+    end
   end
   describe "#get_player_input" do
     it "returns an array of two separate coordinate arrays with integers" do
@@ -117,11 +123,15 @@ describe "Game" do
     end
     it "deletes the rooks original position durring a castle" do
       game = Game.new
+      game.board.grid[5][0] = Piece.new($empty_space)
+      game.board.grid[6][0] = Piece.new($empty_space)
       game.play_move([[4, 0], [6, 0]])
       expect(game.board.grid[7][0].read).to eql($empty_space)
     end
     it "moves the rook durring a castle" do
       game = Game.new
+      game.board.grid[5][0] = Piece.new($empty_space)
+      game.board.grid[6][0] = Piece.new($empty_space)
       game.play_move([[4, 0], [6, 0]])
       expect(game.board.grid[5][0].read).to eql($w_rook)
     end
@@ -144,7 +154,13 @@ describe "Game" do
       game.valid_move?([[4, 1], [4, 2]])
       expect(game.board.grid[4][1].color).to eql("w")
     end
-    it "does not permanently change king moved to true durring checking for check stage" do
+    it "does not change king_moved status to true before castling being allowed" do
+      game = Game.new
+      game.board.grid[5][0] = Piece.new($empty_space)
+      game.board.grid[6][0] = Piece.new($empty_space)
+      game.valid_move?([[4, 0], [6, 0]])
+      game.play_move([[4, 0], [6, 0]])
+      expect(game.board.grid[6][0].read).to eql($w_king)
     end
   end
   describe "#en_passant_deactivator" do

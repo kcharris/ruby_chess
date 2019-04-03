@@ -43,7 +43,6 @@ overall game including rules:
 #moves will determine available moves based on a locations piece's rules and #wcheck & #bcheck will determine if both a player gets into check and if moves are unavailable after a check.
 
 Problems:
-castling works while in check
 draw needs to be tested
 game needs to wait for player input before starting new game
 the way I have the game set now it's difficult to test games
@@ -52,3 +51,5 @@ Interesting:
 Durring the project I encountered a problem where I was pointing to pieces that I wanted to copy, then deleting the initial location and deleting my copy as well as a result. What I had to do was begin a new instance of a class instead of coping the object directly. In the end this did not work and I do not know why. I had a similar problem where I wanted to copy what was inside with Array.new to test for problems as pieces weren't responding as they should, as this creates a new variable that doesn't point to the original. It turns out that I had to create Array.new at my second level of arrays for each array because of the same pointer problem. Things work now!
 
 I had kept a variable in a function that would keep destroying itself after it was done, like it should, but I expected the non instance variable to still exist and for me to continuously add to it.
+
+Testing my save load feature would overwrite my save.

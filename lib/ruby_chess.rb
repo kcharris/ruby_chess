@@ -102,7 +102,7 @@ module RubyChess
   end
 
   class Game
-    attr_accessor :board, :w_king_moved, :b_check
+    attr_accessor :board, :w_king_moved, :b_check, :w_check
 
     def initialize
       @w_turn = true
@@ -229,7 +229,7 @@ module RubyChess
           if @board.grid[7][0].read == $w_rook
             (1..2).each do |i|
               if @board.grid[x + i][y].read == $empty_space
-                count += 1
+                count = count + 1
               end
             end
             moves << [x + 2, y] if count == 2
@@ -238,7 +238,7 @@ module RubyChess
           if @board.grid[0][0].read == $w_rook
             (1..3).each do |i|
               if @board.grid[x - i][y].read == $empty_space
-                count += 1
+                count = count + 1
               end
             end
             moves << [x - 2, y] if count == 3
@@ -305,22 +305,34 @@ module RubyChess
     def valid_move?(player_input)
       game_copy = []
       8.times { |num| game_copy << Array.new(@board.grid[num]) }
-      if @w_turn && @board.grid[player_input[0][0]][player_input[0][1]].color != "w"
+      if @w_turn == true && @board.grid[player_input[0][0]][player_input[0][1]].color != "w"
         return false
-      elsif !@w_turn && @board.grid[player_input[0][0]][player_input[0][1]].color != "b"
+      elsif !@w_turn == true && @board.grid[player_input[0][0]][player_input[0][1]].color != "b"
         return false
       end
       move = moves(player_input[0][0], player_input[0][1])
+      wkm_save = false
+      bkm_save = false
+      if @w_king_moved == true
+        wkm_save = true
+      elsif @b_king_moved == true
+        bkm_save = true
+      end
       if move.include?(player_input[1])
         play_move(player_input)
         #play move here activates king moved before the actual move can take place removing ability to castle.
         check_for_check
         @board.grid = game_copy
+        if wkm_save == false && @w_king_moved == true
+          @w_king_moved = false
+        elsif bkm_save == false && @b_king_moved == true
+          @b_king_moved = false
+        end
         if @w_turn
           if @w_check == true
             return false
           end
-        elsif !@w_turn
+        elsif !@w_turn == true
           if @b_check == true
             return false
           end
@@ -335,12 +347,12 @@ module RubyChess
       @w_check = false
       (0..7).each do |x|
         (0..7).each do |y|
-          moves = moves(x, y)
-          moves.each do |c|
+          move = moves(x, y)
+          move.each do |c|
             if @board.grid[c[0]][c[1]].read == $b_king
               @b_check = true
             end
-            if @board.grid[c[0]][c[1]].read == @w_king
+            if @board.grid[c[0]][c[1]].read == $w_king
               @w_check = true
             end
           end
@@ -556,4 +568,4 @@ end
 
 include RubyChess
 game = Game.new
-# game.game_loop
+game.game_loop
