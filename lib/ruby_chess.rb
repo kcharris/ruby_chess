@@ -102,9 +102,10 @@ module RubyChess
   end
 
   class Game
-    attr_accessor :board, :w_king_moved, :b_check, :w_check
+    attr_accessor :board, :w_king_moved, :b_check, :w_check, :game_ended
 
     def initialize
+      @game_ended = false
       @w_turn = true
       @w_check = false
       @b_check = false
@@ -112,7 +113,6 @@ module RubyChess
       @w_king_moved = false
       @b_king_moved = false
       @board = Board.new
-      @g = @board.grid
     end
 
     def moves(x, y)
@@ -380,9 +380,40 @@ module RubyChess
     end
 
     def game_end
+      draw = false
       has_moves = false
+      w_pieces = {}
+      b_pieces = {}
+      w_not_enough = false
+      b_not_enough = false
       (0..7).each do |x|
         (0..7).each do |y|
+          if @board.grid[x][y].color == "w"
+            if w_pieces[@board.grid[x][y].read] != nil
+              w_pieces[@board.grid[x][y].read] += 1
+            else
+              w_pieces[@board.grid[x][y].read] = 1
+            end
+          end
+          if @board.grid[x][y].color == "b"
+            if b_pieces[@board.grid[x][y].read] != nil
+              b_pieces[@board.grid[x][y].read] += 1
+            else
+              b_pieces[@board.grid[x][y].read] = 1
+            end
+          end
+          if w_pieces.length < 3 && (w_pieces.include?($w_knight) || (w_pieces.include?($w_bishop) && w_pieces[$w_bishop] < 2))
+            w_not_enough = true
+          end
+          if b_pieces.length < 3 && (b_pieces.include?($b_knight) || (b_pieces.include?($b_bishop) && b_pieces[$b_bishop] < 2))
+            b_not_enough = true
+          end
+          if w_not_enough && b_not_enough
+            draw = true
+          else
+            draw = false
+          end
+
           move = moves(x, y)
           move = move.select { |m| valid_move?([[x, y], m]) }
           if @w_turn && @board.grid[x][y].color == "w"
@@ -395,15 +426,22 @@ module RubyChess
       if has_moves == false && @w_turn
         if @w_check == true
           print "B has won the game!\n"
+          @game_ended = true
         else
           print "The game ends in a draw!\n"
+          @game_ended = true
         end
       elsif has_moves == false && !@w_turn
         if @b_check == true
           print "W has won the game!\n"
+          @game_ended = true
         else
           print "The game ends in a draw!\n"
+          @game_ended = true
         end
+      elsif draw == true
+        print "The game ends in a draw!\n"
+        @game_ended = true
       end
     end
 
@@ -535,7 +573,7 @@ module RubyChess
     end
 
     def game_loop
-      while true
+      while !@game_ended
         prompt
         p_m = get_player_input(gets.chomp)
         case p_m
@@ -568,4 +606,4 @@ end
 
 include RubyChess
 game = Game.new
-game.game_loop
+# game.game_loop

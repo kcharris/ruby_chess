@@ -192,4 +192,20 @@ describe "Game" do
       expect(game.board.grid[4][2].read).to eql($w_pawn)
     end
   end
+  describe "#game_end" do
+    it "ends the game if there's a draw" do
+      game = Game.new
+      (0..7).each do |x|
+        (0..7).each do |y|
+          game.board.grid[x][y] = Piece.new($empty_space)
+        end
+      end
+      game.board.grid[0][0] = Piece.new($w_king)
+      game.board.grid[0][1] = Piece.new($w_bishop)
+      game.board.grid[0][7] = Piece.new($b_bishop)
+      game.board.grid[1][7] = Piece.new($b_king)
+      game.game_end
+      expect(game.game_ended).to eql(true)
+    end
+  end
 end
